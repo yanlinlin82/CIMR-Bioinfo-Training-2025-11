@@ -1,0 +1,376 @@
+/* Basic styles */
+.reveal {
+  font-family: "Microsoft YaHei", "SimHei", "STSong", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 24px;
+}
+
+/* Logo watermark */
+body::after {
+  content: "";
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  width: 248px;
+  height: 30px;
+  background: url("images/cimr-logo.png") center/contain no-repeat;
+  z-index: 1000;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Title styles - 通用样式 */
+/* 通用h1样式（特殊section内的h1会被更具体的选择器覆盖） */
+.reveal h1 {
+  font-size: 1.6em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+
+/* 通用h2样式（特殊section内的h2会被更具体的选择器覆盖） */
+.reveal h2 {
+  font-size: 1.3em;
+  margin-bottom: 0.4em;
+  font-weight: 600;
+}
+
+.reveal h3 {
+  font-size: 1.1em;
+  margin: 0.6em 0 0.25em 0;
+  font-weight: 600;
+}
+
+.reveal h4 {
+  font-size: 1.05em;
+  margin-bottom: 0.25em;
+  font-weight: 500;
+}
+
+/* Special title styles */
+/* 章节标题（h1）- 类名在section上，选择section内的h1 */
+.reveal section.chapter-title > h1:first-child {
+  font-size: 1.5em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  background: linear-gradient(to right, #6ab0e2, transparent);
+  padding: 0.3em 0.5em;
+  border-left: 4px solid #4a90e2;
+}
+
+/* 节标题（h2）- 类名在section上，选择section内的h2 */
+.reveal section.section-title > h2:first-child {
+  font-size: 1.3em;
+  margin-bottom: 0.4em;
+  font-weight: 600;
+  background: linear-gradient(to right, #6ab0e2, transparent);
+  padding: 0.3em 0.5em;
+  border-left: 4px solid #4a90e2;
+}
+
+/* Text content */
+.reveal p {
+  margin: 0.5em 0;
+  line-height: 1.6;
+}
+
+.reveal ul,
+.reveal ol {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.reveal ul ul,
+.reveal ol ol,
+.reveal ul ol,
+.reveal ol ul {
+  padding-left: 1em;
+  margin: 0.3em 0;
+}
+
+.reveal li {
+  margin: 0.25em 0;
+  line-height: 1.5;
+}
+
+/* Code */
+.reveal code {
+  font-size: 0.9em;
+  padding: 0.15em 0.4em;
+  background-color: #f0f0f0;
+  border-radius: 3px;
+}
+
+.reveal pre,
+.reveal .slides section pre,
+.reveal .slides section pre[class*="language-"] {
+  font-size: 0.7em;
+  padding: 0.8em;
+  margin: 0.8em 0;
+  border-radius: 4px;
+  overflow-x: hidden !important;
+  overflow-y: hidden;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f8f8f8;
+  border-left: 3px solid #4a90e2;
+}
+
+.reveal pre code,
+.reveal pre code[class*="language-"],
+.reveal .slides section pre code {
+  background-color: transparent;
+  padding: 0;
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.reveal pre .hljs-ln-numbers,
+.reveal pre .hljs-ln-line::before,
+.reveal pre code .line-number,
+.reveal pre code::before,
+.reveal pre .line-numbers,
+.reveal pre [class*="line-number"],
+.reveal pre [class*="ln"],
+.reveal pre td:first-child,
+.reveal pre th:first-child,
+.reveal pre .code-line-number {
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  cursor: default !important;
+}
+
+.reveal pre table td:first-child,
+.reveal pre table th:first-child {
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  cursor: default !important;
+}
+
+/* Table */
+.reveal table {
+  font-size: 0.75em;
+  margin: 0.8em auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: auto;
+  display: table;
+}
+
+.reveal th {
+  background-color: #4a90e2;
+  color: white;
+  font-weight: 600;
+  padding: 0.5em 0.8em;
+  border: 1px solid #3a7bc8;
+}
+
+.reveal td {
+  padding: 0.5em 0.8em;
+  border: 1px solid #e0e0e0;
+}
+
+.reveal tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+
+/* Auto-width table wrapper - 表格根据内容自动调整宽度 */
+.reveal .auto-width-table-wrapper {
+  overflow-x: auto;
+  margin: 0.8em 0;
+}
+
+.reveal .auto-width-table-wrapper table {
+  table-layout: auto;
+  width: auto;
+  max-width: 100%;
+}
+
+.reveal .auto-width-table-wrapper table th,
+.reveal .auto-width-table-wrapper table td {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* 覆盖自动生成的colgroup列宽 - 让表格根据内容自动调整 */
+.reveal .auto-width-table-wrapper table colgroup col {
+  width: auto !important;
+}
+
+/* 自定义列宽的表格 - 可以手动指定各列宽度 */
+.reveal .custom-width-table-wrapper table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* AI工具表格 - 自定义列宽，覆盖Quarto自动生成的colgroup */
+.reveal .ai-tools-table-wrapper {
+  overflow-x: auto;
+  margin: 0.8em 0;
+}
+
+.reveal .ai-tools-table-wrapper table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.reveal .ai-tools-table-wrapper table th,
+.reveal .ai-tools-table-wrapper table td {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* 强制覆盖Quarto自动生成的colgroup列宽 */
+.reveal .ai-tools-table-wrapper table colgroup col:nth-child(1) { width: 12% !important; } /* 工具名称 */
+.reveal .ai-tools-table-wrapper table colgroup col:nth-child(2) { width: 15% !important; } /* IDE支持 */
+.reveal .ai-tools-table-wrapper table colgroup col:nth-child(3) { width: 12% !important; } /* 国内可用性 */
+.reveal .ai-tools-table-wrapper table colgroup col:nth-child(4) { width: 12% !important; } /* 生信分析适用性 */
+.reveal .ai-tools-table-wrapper table colgroup col:nth-child(5) { width: 18% !important; } /* 主要特点 */
+.reveal .ai-tools-table-wrapper table colgroup col:nth-child(6) { width: 18% !important; } /* 优势 */
+.reveal .ai-tools-table-wrapper table colgroup col:nth-child(7) { width: 13% !important; } /* 劣势 */
+
+/* Custom table column widths - 针对"生信的常见分析内容"部分的表格 */
+.reveal .analysis-table-wrapper table {
+  font-size: 0.7em;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.reveal .analysis-table-wrapper table th:nth-child(1),
+.reveal .analysis-table-wrapper table td:nth-child(1) {
+  width: 2%;
+}
+
+.reveal .analysis-table-wrapper table th:nth-child(2),
+.reveal .analysis-table-wrapper table td:nth-child(2) {
+  width: 3%;
+}
+
+.reveal .analysis-table-wrapper table th:nth-child(3),
+.reveal .analysis-table-wrapper table td:nth-child(3) {
+  width: 95%;
+}
+
+/* Media */
+.reveal img {
+  max-width: 100%;
+  height: auto;
+  margin: 0.8em auto;
+  border-radius: 4px;
+  display: block;
+}
+
+/* Figure container */
+.reveal .figure {
+  text-align: center;
+  margin: 0.8em auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reveal .figure img {
+  margin: 0 auto;
+  display: block;
+}
+
+.reveal .figure figcaption,
+.reveal .figure p:last-child:not(:has(img)) {
+  text-align: center;
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 0.5em;
+  font-style: italic;
+  display: block;
+  width: 100%;
+}
+
+/* Links */
+.reveal a {
+  color: #4a90e2;
+  text-decoration: none;
+}
+
+.reveal a:hover {
+  text-decoration: underline;
+}
+
+/* Blockquote */
+.reveal blockquote {
+  border-left: 4px solid #4a90e2;
+  padding-left: 1em;
+  margin: 0.8em 0;
+  font-style: italic;
+  color: #555;
+}
+
+/* Special components */
+.reveal .slides section:first-child .subtitle {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0.8em 0;
+  padding: 0.6em 1em;
+  border-left: 5px solid #4a90e2;
+  text-align: center;
+  letter-spacing: 0.05em;
+  position: relative;
+  background: linear-gradient(to right, #86b6ed, transparent);
+}
+
+.reveal .slides section:first-child .subtitle::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: linear-gradient(to right, #4a90e2, transparent);
+}
+
+.reveal .slides section.level2 {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100vh;
+}
+
+.reveal .toc-desc {
+  text-indent: 2em;
+  font-style: italic;
+}
+
+/* Compact section */
+.reveal .compact-section {
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+
+.reveal .compact-section h3 {
+  font-size: 1em;
+  margin: 0.5em 0 0.2em 0;
+}
+
+.reveal .compact-section p {
+  margin: 0.4em 0;
+}
+
+.reveal .compact-section ul,
+.reveal .compact-section ol {
+  margin: 0.4em 0;
+  padding-left: 1.2em;
+}
+
+.reveal .compact-section li {
+  margin: 0.2em 0;
+}
+
+.reveal .compact-section img {
+  margin: 0.6em 0;
+}

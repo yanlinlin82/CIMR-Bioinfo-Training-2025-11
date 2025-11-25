@@ -1,0 +1,1705 @@
+---
+title: "生物信息学基础培训"
+subtitle: "数据格式、数据库访问、Linux操作与AI辅助学习"
+author: "颜林林"
+date: 2025-11-26
+---
+
+## 目录 {.section-title}
+
+### 一、生物信息学概述与生物学数据
+
+::: {.toc-desc}
+为什么需要数据、如何使用数据解决问题、常见数据格式
+:::
+
+### 二、数据获取：公共数据库与参考数据
+
+::: {.toc-desc}
+数据来源、主要网站和数据库、数据下载方法
+:::
+
+### 三、Linux基础与数据处理
+
+::: {.toc-desc}
+围绕实用主题学习Linux命令：查看分析数据、批量处理文件
+:::
+
+### 四、综合实践：AI辅助完成完整项目
+
+::: {.toc-desc}
+使用IDE和AI工具创建项目、完整分析流程、AI在每个环节的应用
+:::
+
+# 一、生物信息学概述与生物学数据 {.chapter-title}
+
+## 生物信息学及其研究对象 {.section-title}
+
+- 定义：生物学与计算机科学、数学、信息学等**多学科交叉**融合的新兴学科，旨在通过计算技术和数据分析方法，研究生物系统中的信息内容、信息流向及规律
+- 研究对象：各种各样的**生物学数据**
+  - 组学类型多样化：基因组、转录组、蛋白组、表观组、代谢组、微生物组……
+  - 数据规模快速增长：从GB到TB、PB，甚至EB级别
+
+::: {.columns}
+
+::: {.column width="50%"}
+::: {.figure}
+![多学科交叉的生物信息学<br>(Studneva et al. EPMA Journal, 2015)](images/bioinformatics-interdisciplinary.png){width="300px" height="250px"}
+:::
+:::
+
+::: {.column width="50%"}
+
+::: {.figure}
+![生物学数据增长趋势<br>(Picture from [Pascal GP Martin](https://pascal-martin.netlify.app/post/plotting-sra-database-growth/))](images/data-growth-trend.png){width="400px" height="320px"}
+:::
+
+:::
+:::
+
+## 组学数据的层次 {.section-title}
+
+生物学数据可按照生物学过程划分为多个组学层次：
+
+::: {.columns}
+
+::: {.column width="40%"}
+::: {.figure}
+![组学层次<br>(Wu et al. J Dent Res, 2011)](images/omics-levels.png){width="400px" height="300px"}
+:::
+:::
+
+::: {.column width="60%"}
+
+**主要组学类型**：
+
+| 组学类型 | 研究内容 |
+|---------|---------|
+| **基因组学（Genomics）** | DNA序列、基因结构、变异信息 |
+| **转录组学（Transcriptomics）** | RNA表达、转录本、剪接变异 |
+| **蛋白质组学（Proteomics）** | 蛋白质序列、结构、修饰、相互作用 |
+| **代谢组学（Metabolomics）** | 代谢物、代谢通路 |
+| **表观基因组学（Epigenomics）** | DNA甲基化、组蛋白修饰 |
+
+:::
+:::
+
+每个层次的数据都有其特定的格式和分析方法，理解这些层次有助于选择合适的分析策略。
+
+## 生信的常见分析内容
+
+<div class="analysis-table-wrapper">
+
+| 分析领域 | 分析方法 | 描述 |
+|---------|---------|------|
+| 基因组学分析 | 序列比对与组装 | 将测序得到的短序列片段与参考基因组进行比对，或通过算法将这些片段拼接成完整的基因组序列。 |
+|  | 基因预测 | 识别基因组中编码蛋白质的区域，确定基因的位置和结构。 |
+|  | 变异检测 | 如单核苷酸多态性（SNP）、插入/缺失（InDel）和结构变异的检测，以了解基因组的多样性。 |
+| 转录组学分析 | 表达量计算 | 通过高通量测序技术（如RNA-Seq）定量基因在不同条件下的表达水平。 |
+|  | 差异表达分析 | 识别在不同样本或条件下表达量有显著差异的基因，为功能研究和疾病机制探索提供线索。 |
+|  | 可变剪接分析 | 研究同一基因转录本在不同组织或发育阶段的剪接变异形式。 |
+| 蛋白质组学分析 | 蛋白质鉴定 | 利用质谱等技术对蛋白质进行鉴定，确定其序列和翻译后修饰。 |
+|  | 蛋白质结构预测 | 基于氨基酸序列预测蛋白质的三维结构，为理解其功能和设计药物提供依据。 |
+|  | 蛋白质-蛋白质相互作用分析 | 构建蛋白质相互作用网络，揭示细胞内复杂的信号传导和调控机制。 |
+| 功能与通路分析 | 基因功能注释 | 将基因与已知的功能数据库（如Gene Ontology）关联，了解其生物学功能。 |
+|  | 通路富集分析 | 通过KEGG等通路数据库，分析基因或蛋白质在特定生物学过程或疾病中的富集情况，揭示其在细胞功能和疾病发生中的作用。 |
+| 系统生物学分析 | 网络构建与分析 | 整合基因、蛋白质、代谢物等多组学数据，构建生物网络模型，研究生物系统的整体行为和动态变化。 |
+|  | 模拟与建模 | 通过数学模型和计算机模拟，预测生物系统对不同刺激或扰动的响应，为实验设计和疾病治疗提供理论支持。 |
+
+</div>
+
+## 各种各样的生物学数据
+
+![蛋白质三维结构](images/protein-3d-structure.png){.absolute bottom=100 left=50 width="150" height="150"}
+![多序列比对](images/multiple-sequence-alignment.png){.absolute top=50 left=400 width="450" height="250"}
+![网络连接关系](images/network-connectivity-levels.png){.absolute top=200 right=0 width="240" height="400"}
+![系统发育树](images/phylogenetic-tree.png){.absolute bottom=20 left=200 width="600" height="350"}
+![染色体结构数据](images/chromosome-structure-data.png){.absolute top=50 left=0 width="300" height="330"}
+
+## 为什么需要生物学数据 {.section-title}
+
+### 生物学研究中的常见问题
+
+在生物学研究中，我们经常面临类似如下问题：
+
+- **基因功能是什么？** 如何理解某个基因在细胞中的作用机制？
+- **基因表达有什么差异？** 不同条件下哪些基因的表达发生了变化？
+- **变异与疾病的关系？** 某个DNA变异是否会导致疾病？
+- **蛋白质如何相互作用？** 哪些蛋白质会形成复合物或调控网络？
+
+### 数据如何帮助解决这些问题
+
+生物学数据是回答这些问题的关键。不同类型的数据可以帮助我们解决不同的研究问题：
+
+| 研究问题 | 需要的数据类型 | 能解决的问题 |
+|---------|--------------|------------|
+| **发现新基因** | 序列数据、注释数据 | 了解基因结构、预测功能 |
+| **差异表达分析** | 表达数据、参考基因组、注释数据 | 发现差异表达基因、功能富集 |
+| **变异分析** | 测序数据、参考基因组、变异数据库 | 识别变异、注释功能、关联疾病 |
+| **功能研究** | 序列数据、功能注释数据库 | 理解基因功能、通路分析 |
+
+## 数据如何组织和存储：常见数据格式 {.section-title}
+
+了解了为什么需要数据和如何使用数据后，我们需要了解数据是如何组织和存储的。不同的数据格式适合存储不同类型的信息。
+
+### 数据格式概述
+
+生物信息学中涉及多种数据格式，每种格式都有其特定的用途和结构。理解这些格式对于数据分析至关重要。
+
+**主要类别**：
+
+- 序列数据格式：FASTA、FASTQ
+- 比对数据格式：SAM、BAM
+- 变异数据格式：VCF
+- 注释数据格式：GFF、GTF、BED
+- 表达数据格式：表达矩阵、read count表
+
+---
+
+## 矩阵数据
+
+::: {.columns}
+::: {.column width="50%"}
+
+::: {.figure}
+![CSV格式示例](images/csv-format.png){width=90%}
+:::
+
+:::
+::: {.column width="50%"}
+
+::: {.figure}
+![TSV格式示例](images/tsv-format.png){width=90%}
+:::
+
+:::
+:::
+
+::: {.figure .center}
+![基因表达矩阵](images/expression-matrix.png){width="60%"}
+:::
+
+<center><small>
+<https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE149445>
+</small></center>
+
+## 数据格式：GenBank（序列原始记录） {.section-title}
+
+::: {.columns}
+::: {.column width="50%"}
+![](images/genbank-data-1.png)
+:::
+::: {.column width="50%"}
+![](images/genbank-data-2.png)
+:::
+:::
+
+<center><small>
+<https://www.ncbi.nlm.nih.gov/genbank/samplerecord/>
+</small></center>
+
+## FASTA格式 {.section-title}
+
+**用途**：存储序列数据（基因、蛋白质、参考基因组）
+
+**示例**：
+
+```fasta
+>seq1 描述信息
+ATCGATCGATCGATCGATCGATCG
+>seq2 描述信息
+GCTAGCTAGCTAGCTAGCTAGCTA
+```
+
+**结构**：
+
+| 行类型 | 说明 | 示例 |
+|--------|------|------|
+| 序列标识行 | 以`>`开头，包含序列名称和描述 | `>seq1 描述信息` |
+| 序列行 | 实际序列（DNA、RNA或蛋白质） | `ATCGATCGATCGATCGATCGATCG` |
+
+**常见处理工具**：
+
+- **查看和统计**：`grep`、`wc`、`awk`（统计序列数量、提取序列ID）
+- **序列处理**：`seqtk`（序列提取、转换、统计）、`seqkit`（序列处理工具集）
+- **格式转换**：`bioawk`（生物信息学版awk）、`EMBOSS`工具集
+- **序列比对**：`BLAST`、`BLAT`、`minimap2`（用于序列比对）
+- **序列组装**：`SPAdes`、`Velvet`、`Canu`（基因组组装）
+
+**特点**：简单易读，广泛支持；扩展名：`.fa`、`.fasta`、`.fas`
+
+## 典型的高通量测序数据
+
+::: {.figure}
+![参考基因组和reads测序数据](images/reference-genome-reads-sequencing.png){width=80%}
+:::
+
+## FASTQ格式 {.section-title}
+
+**用途**：存储测序原始数据（序列+质量信息）
+
+**示例**：
+
+```fastq
+@read1/1
+ATCGATCGATCGATCGATCG
++
+IIIIIIIIIIIIIIIIIIII
+@read2/1
+GCTAGCTAGCTAGCTAGCTA
++
+HHHHHHHHHHHHHHHHHHHH
+```
+
+**结构**：每条记录4行（tab分隔）
+
+| 行号 | 行类型 | 说明 | 示例 |
+|------|--------|------|------|
+| 1 | 序列标识行 | 以`@`开头 | `@read1/1` |
+| 2 | 序列行 | 序列数据 | `ATCGATCGATCGATCGATCG` |
+| 3 | 分隔行 | 以`+`开头（可选标识符） | `+` |
+| 4 | 质量行 | 质量分数（ASCII编码） | `IIIIIIIIIIIIIIIIIIII` |
+
+**特点**：同时存储序列和质量；质量分数编码（Phred+33/64）
+
+::: {.figure}
+![碱基质量解释](images/fastq-quality-explanation.png){width="80%"}
+:::
+
+**常见处理工具**：
+
+- **质量控制和统计**：`FastQC`（质量评估报告）、`seqtk`（质量过滤、统计）
+- **格式转换**：`seqtk`（FASTQ↔FASTA转换）、`bioawk`（格式处理）
+- **质量过滤**：`Trimmomatic`、`cutadapt`（去除接头、低质量序列）
+- **序列处理**：`seqkit`（序列提取、统计、转换）、`fastp`（快速质量控制和过滤）
+- **数据统计**：`grep`、`awk`（统计read数量、平均长度等）
+
+## SAM/BAM格式 {.section-title}
+
+**用途**：存储序列比对结果
+
+**示例**：
+
+```sam
+@HD VN:1.6 SO:coordinate
+@SQ SN:chr1 LN:248956422
+read1    0    chr1    1000    60    50M    *    0    0    ATCGATCGATCGATCGATCGATCGATCGATCGATCGATCG    IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+read2    16    chr1    2000    60    45M5I    *    0    0    GCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAG    HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+```
+
+**结构**：
+
+**SAM格式**（文本）：11个必需字段（tab分隔）
+
+| 列号 | 字段名 | 说明 | 示例 |
+|------|--------|------|------|
+| 1 | QNAME | 序列名 | `read1` |
+| 2 | FLAG | 标志位（比对信息） | `0` |
+| 3 | RNAME | 参考序列名 | `chr1` |
+| 4 | POS | 比对位置（1-based） | `1000` |
+| 5 | MAPQ | 比对质量分数 | `60` |
+| 6 | CIGAR | 比对信息（匹配/插入/缺失） | `50M` |
+| 7 | RNEXT | 配对read的参考序列 | `*` |
+| 8 | PNEXT | 配对read的位置 | `0` |
+| 9 | TLEN | 模板长度 | `0` |
+| 10 | SEQ | 序列 | `ATCGATCG...` |
+| 11 | QUAL | 质量分数 | `IIIIIIII...` |
+
+**BAM格式**（二进制）：
+
+- SAM的压缩格式，体积小（约1/4），支持索引，需用samtools查看
+
+**常见处理工具**：
+
+- **核心工具**：`samtools`（查看、排序、索引、格式转换、统计）
+- **比对工具**：`BWA`、`Bowtie2`、`minimap2`、`STAR`（生成SAM/BAM文件）
+- **重复标记**：`Picard MarkDuplicates`、`samtools markdup`（标记PCR重复）
+- **比对质量**：`Qualimap`（比对质量评估）、`samtools flagstat`（统计比对情况）
+- **区域提取**：`samtools view`（提取特定区域）、`bedtools`（区间操作）
+- **格式转换**：`samtools view`（SAM↔BAM转换）、`samtools fastq`（转换为FASTQ）
+
+**参考文献**：[@sam2009]
+
+## VCF格式 {.section-title}
+
+**用途**：存储变异信息（SNP、Indel等）
+
+**示例**：
+
+```vcf
+##fileformat=VCFv4.3
+##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  sample1
+chr1    1000    .       A       G       100     PASS    AF=0.5  GT:DP   0/1:20
+chr1    2000    rs123   C       T       200     PASS    AF=0.3  GT:DP   1/1:30
+```
+
+**结构**：
+
+| 行类型 | 说明 | 标识符 |
+|--------|------|--------|
+| 元数据行 | 文件格式、INFO/FORMAT字段定义等 | 以`##`开头 |
+| 表头行 | 列名（必需字段+样本名） | 以`#`开头 |
+| 数据行 | 变异信息（tab分隔） | 普通行 |
+
+**主要字段**（数据行，tab分隔）：
+
+| 字段名 | 说明 | 示例 |
+|--------|------|------|
+| CHROM | 染色体 | `chr1` |
+| POS | 位置（1-based） | `1000` |
+| ID | 变异ID | `.` |
+| REF | 参考等位基因 | `A` |
+| ALT | 替代等位基因 | `G` |
+| QUAL | 质量分数 | `100` |
+| FILTER | 过滤状态 | `PASS` |
+| INFO | 附加信息 | `AF=0.5;DP=100` |
+| FORMAT | 样本格式 | `GT:DP:AD` |
+| 样本列 | 样本基因型数据 | `0/1:20:10,10` |
+
+**常见处理工具**：
+
+- **核心工具**：`bcftools`（查看、过滤、统计、格式转换）、`tabix`（索引和查询）
+- **变异注释**：`VEP`（Ensembl Variant Effect Predictor）、`Annovar`、`SnpEff`（功能注释）
+- **变异检测**：`GATK`、`FreeBayes`、`VarScan`（从BAM文件检测变异）
+- **质量过滤**：`bcftools filter`、`GATK VariantFiltration`（过滤低质量变异）
+- **格式转换**：`bcftools convert`（VCF↔其他格式）、`vcf2bed`（转换为BED格式）
+- **统计分析**：`bcftools stats`、`vcftools`（变异统计和群体遗传分析）
+
+**参考文献**：[@vcf2011]
+
+## BED格式 {.section-title}
+
+**用途**：表示基因组区间（基因、外显子、峰等）
+
+**示例**：
+
+```bed
+chr1    1000    2000    gene1    100    +
+chr2    5000    6000    gene2    200    -    gene2_exon1
+chr3    10000   15000    peak1    500    .    12000    14000    0,0,255    2    500,300    0,2000
+```
+
+**结构**：至少3列，最多12列（tab分隔）
+
+| 列号 | 字段名 | 说明 | 必需 | 示例 |
+|------|--------|------|------|------|
+| 1 | chrom | 染色体名称 | ✓ | `chr1` |
+| 2 | chromStart | 起始位置（0-based） | ✓ | `1000` |
+| 3 | chromEnd | 结束位置（0-based，不包含） | ✓ | `2000` |
+| 4 | name | 区间名称 | | `gene1` |
+| 5 | score | 分数（0-1000） | | `100` |
+| 6 | strand | 链方向（+/-/.） | | `+` |
+| 7 | thickStart | 粗显示起始 | | `1200` |
+| 8 | thickEnd | 粗显示结束 | | `1800` |
+| 9 | itemRgb | RGB颜色 | | `255,0,0` |
+| 10 | blockCount | 块数量 | | `3` |
+| 11 | blockSizes | 块大小（逗号分隔） | | `100,200,300` |
+| 12 | blockStarts | 块起始位置（逗号分隔） | | `0,500,1000` |
+
+**主要字段**：
+
+| 字段 | 说明 | 必需 | 示例 |
+|------|------|------|------|
+| chrom | 染色体名称 | ✓ | `chr1` |
+| chromStart | 起始位置（0-based） | ✓ | `1000` |
+| chromEnd | 结束位置（0-based，不包含） | ✓ | `2000` |
+| name | 区间名称 | | `gene1` |
+| score | 分数（0-1000） | | `100` |
+| strand | 链方向（+/-/.） | | `+` |
+
+**常见处理工具**：
+
+- **核心工具**：`bedtools`（区间操作：交集、并集、合并、覆盖度等）
+- **格式转换**：`bedtools`（BED↔其他格式）、`liftOver`（坐标系统转换）
+- **区间操作**：`bedtools intersect`（求交集）、`bedtools merge`（合并重叠区间）、`bedtools coverage`（计算覆盖度）
+- **可视化**：`UCSC Genome Browser`、`IGV`（基因组浏览器查看）
+- **统计和筛选**：`bedtools groupby`（分组统计）、`awk`（自定义筛选）
+- **格式验证**：`bedtools sort`（排序）、`bedtools merge`（去重和合并）
+
+**特点**：0-based坐标系统（注意与1-based的区别）
+
+**参考文献**：[@bedtools2010]
+
+## GFF/GTF格式（基因结构） {.section-title}
+
+**用途**：存储基因注释信息（基因、外显子、CDS等）
+
+**示例**：
+
+::: {.figure}
+![GTF格式](images/gtf-format.png)
+:::
+
+::: {.figure}
+![GFF3格式](images/gff-format.png)
+:::
+
+```gtf
+chr1    Ensembl    gene    1000    2000    .    +    .    gene_id "GENE1"; gene_name "Gene1"
+chr1    Ensembl    transcript    1000    2000    .    +    .    gene_id "GENE1"; transcript_id "T1"
+chr1    Ensembl    exon    1000    1500    .    +    .    gene_id "GENE1"; transcript_id "T1"; exon_number "1"
+chr1    Ensembl    exon    1600    2000    .    +    .    gene_id "GENE1"; transcript_id "T1"; exon_number "2"
+```
+
+**结构**：9列（tab分隔）
+
+| 列号 | 字段名 | 说明 | 示例 |
+|------|--------|------|------|
+| 1 | seqname | 序列名（染色体/contig） | `chr1` |
+| 2 | source | 数据来源 | `Ensembl` |
+| 3 | feature | 特征类型（gene/exon/CDS等） | `gene` |
+| 4 | start | 起始位置（1-based） | `1000` |
+| 5 | end | 结束位置（1-based） | `2000` |
+| 6 | score | 分数（.表示无） | `.` |
+| 7 | strand | 链方向（+/-/.） | `+` |
+| 8 | frame | 读码框（0/1/2/.） | `.` |
+| 9 | attributes | 属性信息（键值对） | `gene_id "GENE1"` |
+
+**主要字段**：
+
+| 字段 | 说明 | 示例 |
+|------|------|------|
+| seqname | 序列名（染色体/contig） | `chr1` |
+| source | 数据来源 | `Ensembl` |
+| feature | 特征类型（gene/exon/CDS等） | `gene` |
+| start | 起始位置（1-based） | `1000` |
+| end | 结束位置（1-based） | `2000` |
+| strand | 链方向（+/-/.） | `+` |
+| attributes | 属性信息（键值对） | `gene_id "GENE1"` |
+
+**常见处理工具**：
+
+- **格式转换**：`gffread`（GFF/GTF处理）、`AGAT`（GFF/GTF注释工具）、`bedtools`（转换为BED格式）
+- **注释处理**：`gffutils`（Python库，GFF/GTF数据库操作）、`AGAT`（注释增强和转换）
+- **提取和筛选**：`gffread`（提取序列、转录本）、`awk`、`grep`（自定义筛选）
+- **格式验证**：`AGAT`（格式检查和修复）、`gffread`（格式验证）
+- **统计和查询**：`gffutils`（统计特征数量）、`bedtools`（区间操作）
+- **可视化**：`IGV`、`UCSC Genome Browser`（基因组浏览器查看）
+
+**GFF vs GTF**：
+
+| 格式 | attributes格式 | 示例 |
+|------|----------------|------|
+| GFF3 | 使用`=`连接键值对 | `gene_id=GENE1;gene_name=Gene1` |
+| GTF | 使用空格和引号，格式更严格 | `gene_id "GENE1"; gene_name "Gene1"` |
+
+## PDB格式（蛋白结构） {.section-title}
+
+PDB (Protein Data Bank)
+
+::: {.columns}
+::: {.column width="16%"}
+![](images/3d-molecular-structure-dna-protein.png)
+:::
+::: {.column width="28%"}
+![](images/molecular-structure-data-part1.png){width="95%"}
+:::
+::: {.column width="28%"}
+![](images/molecular-structure-data-part2.png){width="95%"}
+:::
+::: {.column width="28%"}
+![](images/molecular-structure-data-part3.png){width="95%"}
+:::
+:::
+
+<center><small>
+<https://www.rcsb.org/structure/9GUI>
+</small></center>
+
+## 数据格式转换举例 {.section-title}
+
+### 常见格式转换
+
+**FASTA ↔ FASTQ**：
+```bash
+# 使用seqtk
+seqtk seq -A input.fastq > output.fasta
+```
+
+**SAM ↔ BAM**：
+```bash
+# SAM转BAM
+samtools view -bS input.sam > output.bam
+
+# BAM转SAM
+samtools view input.bam > output.sam
+```
+
+## AI辅助学习：数据格式学习 {.section-title .compact-section}
+
+在学习生物学数据格式时，AI可以帮助你快速理解和掌握：
+
+1. **理解新格式**：遇到不认识的格式（如.fasta、.vcf、.bam等），主动问AI：
+   ```
+   "我遇到了一个.fasta文件，这个格式是做什么用的？
+   如何查看文件中的序列ID？如何统计序列数量？"
+   ```
+   通过AI快速了解格式用途和基本操作，然后自己实际操作验证。
+
+2. **理解格式细节**：需要深入理解格式结构时，问AI：
+   ```
+   "VCF格式中的INFO字段是什么意思？包含哪些信息？
+   如何从VCF文件中提取特定字段？"
+   ```
+   理解格式细节后，查阅官方文档验证，通过实践加深理解。
+
+3. **处理格式数据**：需要处理特定格式的数据时，问AI：
+   ```
+   "如何从FASTA文件中提取所有序列ID？
+   如何统计VCF文件中每个染色体的变异数量？"
+   ```
+   获取命令或代码后，理解其原理，自己测试和修改，而不是简单复制。
+
+**关键**：通过AI来学习，理解原理，实际操作验证，而不是完全依赖AI。
+
+# 二、数据获取：公共数据库与参考数据 {.chapter-title}
+
+## 生信数据库的分类
+
+按数据来源和处理方法进行划分：
+
+- 一级数据库（Primary Database）：原始提交的序列
+- 二级数据库（Secondary Database）：经人工核对和分析处理
+
+::: {.columns}
+::: {.column width="50%"}
+::: {.figure}
+![](images/database-comparison-primary-secondary.png)
+:::
+:::
+::: {.column width="50%"}
+::: {.figure}
+![常见的生信数据库（分为一级和二级数据库）](images/bioinformatics-databases-primary-secondary.png){width="800px"}
+:::
+:::
+:::
+
+## 生信数据库的分类
+
+::: {.figure}
+![](images/database-classification-alternative.png)
+:::
+
+## 数据的来源 {.section-title}
+
+在生物信息学研究中，数据主要来自以下几个方面：
+
+### 1. 自测数据
+
+- **实验室测序数据**：自己实验室产生的测序数据（FASTQ格式）
+- **芯片数据**：基因芯片、表达芯片等
+- **其他实验数据**：质谱、成像等
+
+### 2. 公共数据
+
+- **已发表研究的原始数据**：其他研究者公开发表的数据
+- **数据来源**：SRA、GEO、ArrayExpress等
+- **用途**：数据挖掘、验证、比较分析
+
+### 3. 参考数据
+
+- **参考基因组**：标准化的基因组序列（如人类GRCh38/hg38）
+- **参考序列**：参考基因序列、转录本序列（RefSeq）
+- **用途**：比对、注释、分析的标准参考
+
+### 4. 注释数据
+
+- **基因注释**：基因位置、外显子、转录本信息
+- **功能注释**：GO、KEGG等功能分类
+- **变异注释**：dbSNP、ClinVar等变异数据库
+- **用途**：功能解释、通路分析、变异注释
+
+## 公共数据资源 {.section-title}
+
+### 测序数据
+
+::: {.columns}
+::: {.column width="75%"}
+**SRA（Sequence Read Archive）**
+
+- **来源**：NCBI
+- **内容**：原始测序数据
+- **用途**：下载已发表研究的原始测序数据
+- **访问**：<https://www.ncbi.nlm.nih.gov/sra/>
+:::
+::: {.column width="25%"}
+::: {.figure .center}
+![SRA网站](images/sra-website.png){width="150px"}
+:::
+:::
+:::
+
+::: {.columns}
+::: {.column width="75%"}
+**ENA（European Nucleotide Archive）**
+
+- **来源**：EBI
+- **内容**：欧洲测序数据
+- **用途**：下载欧洲研究者的测序数据
+- **访问**：<https://www.ebi.ac.uk/ena>
+
+:::
+::: {.column width="25%"}
+::: {.figure .center}
+![ENA网站](images/ena-website.png){width="300px"}
+:::
+:::
+:::
+
+## 公共数据资源 {.section-title}
+
+### 表达数据
+
+::: {.columns}
+::: {.column width="75%"}
+**GEO（Gene Expression Omnibus）**
+
+- **来源**：NCBI
+- **内容**：基因表达数据（芯片、RNA-seq等）
+- **用途**：差异表达分析、数据挖掘
+- **访问**：<https://www.ncbi.nlm.nih.gov/geo/>
+
+:::
+::: {.column width="25%"}
+::: {.figure .center}
+![GEO网站](images/geo-website.png){width="300px"}
+:::
+:::
+:::
+
+**ArrayExpress**
+
+- **来源**：EBI
+- **内容**：芯片和测序表达数据
+- **用途**：表达数据分析
+- **访问**：<https://www.ebi.ac.uk/arrayexpress/>
+
+## 参考数据资源 {.section-title}
+
+### 参考基因组
+
+**人类参考基因组**：
+
+- **GRCh38/hg38**：当前标准版本
+- **GRCh37/hg19**：常用版本（部分工具仍使用）
+- **获取**：NCBI、Ensembl、UCSC
+
+**其他物种**：
+- 小鼠、果蝇、斑马鱼等
+- 获取：NCBI Genome、Ensembl
+
+::: {.figure}
+![参考基因组网站](images/reference-genome-website.png){width="400px"}
+:::
+
+## 参考数据资源 {.section-title}
+
+### 参考序列
+
+::: {.columns}
+::: {.column width="75%"}
+**RefSeq（Reference Sequence）**
+
+- **来源**：NCBI
+- **内容**：参考序列数据库
+- **用途**：基因序列、转录本序列
+- **访问**：<https://www.ncbi.nlm.nih.gov/refseq/>
+:::
+::: {.column width="25%"}
+:::
+:::
+
+## 参考数据资源 {.section-title}
+
+### 参考注释
+
+::: {.columns}
+::: {.column width="75%"}
+**Ensembl**
+
+- **来源**：EBI
+- **内容**：详细的基因注释
+- **用途**：基因位置、外显子、转录本信息
+- **访问**：<https://www.ensembl.org/>
+:::
+::: {.column width="25%"}
+::: {.figure .center}
+![Ensembl网站](images/ensembl-website.png){width="200px"}
+:::
+:::
+:::
+
+::: {.columns}
+::: {.column width="75%"}
+**UCSC Genome Browser**
+
+- **来源**：UCSC
+- **内容**：基因组注释和可视化
+- **用途**：基因组浏览、注释查看、数据下载
+- **访问**：<https://genome.ucsc.edu/>
+:::
+::: {.column width="25%"}
+::: {.figure .center}
+![UCSC网站](images/ucsc-website.png){width="400px"}
+:::
+:::
+:::
+
+::: {.columns}
+::: {.column width="75%"}
+**NCBI Gene**
+
+- **来源**：NCBI
+- **内容**：基因注释信息
+- **用途**：基因位置、外显子、转录本信息
+- **访问**：<https://www.ncbi.nlm.nih.gov/gene/>
+:::
+::: {.column width="25%"}
+::: {.figure .center}
+![NCBI网站](images/ncbi-website.png){width="200px"}
+:::
+:::
+:::
+
+## 注释数据资源 {.section-title}
+
+### 功能注释数据库
+
+::: {.columns}
+::: {.column width="75%"}
+**GO（Gene Ontology）**
+
+- **来源**：Gene Ontology Consortium
+- **内容**：基因功能的标准分类体系
+- **类型**：生物过程、分子功能、细胞组分
+- **用途**：功能富集分析
+- **访问**：<http://geneontology.org/>
+- **参考文献**：[@go2000]
+:::
+::: {.column width="25%"}
+::: {.figure .center}
+:::
+:::
+:::
+
+::: {.columns}
+::: {.column width="75%"}
+**KEGG（Kyoto Encyclopedia of Genes and Genomes）**
+
+- **来源**：Kyoto University
+- **内容**：通路数据库和知识库
+- **包含**：代谢通路、信号通路、疾病通路
+- **用途**：通路富集分析
+- **访问**：<https://www.genome.jp/kegg/>
+- **参考文献**：[@kegg2000]
+:::
+::: {.column width="25%"}
+:::
+:::
+
+::: {.columns}
+::: {.column width="75%"}
+**Reactome**
+
+- **来源**：Reactome Consortium
+- **内容**：经过专家审核的生物通路数据库
+- **特点**：详细的反应步骤和分子相互作用
+- **用途**：通路富集分析、通路可视化
+- **访问**：<https://reactome.org/>
+- **参考文献**：[@reactome2023]
+:::
+::: {.column width="25%"}
+:::
+:::
+
+## 参考数据资源 {.section-title}
+
+### 变异注释数据库
+
+::: {.columns}
+::: {.column width="75%"}
+**dbSNP**
+
+- **来源**：NCBI
+- **内容**：单核苷酸多态性数据库
+- **包含**：人群频率信息、功能注释（如ClinVar关联）
+- **用途**：变异注释、频率查询
+- **访问**：<https://www.ncbi.nlm.nih.gov/snp/>
+- **参考文献**：[@dbsnp2001]
+:::
+::: {.column width="25%"}
+:::
+:::
+
+::: {.columns}
+::: {.column width="75%"}
+**ClinVar**
+
+- **来源**：NCBI
+- **内容**：临床意义变异数据库
+- **包含**：变异与疾病的关联信息、临床解释和证据等级
+- **用途**：变异临床意义注释
+- **访问**：<https://www.ncbi.nlm.nih.gov/clinvar/>
+- **参考文献**：[@clinvar2016]
+:::
+::: {.column width="25%"}
+:::
+:::
+
+::: {.columns}
+::: {.column width="75%"}
+**gnomAD**
+
+- **来源**：Broad Institute
+- **内容**：基因组聚合数据库
+- **包含**：大规模人群测序数据、等位基因频率和注释
+- **用途**：变异频率查询、人群遗传学分析
+- **访问**：<https://gnomad.broadinstitute.org/>
+- **参考文献**：[@gnomad2020]
+:::
+::: {.column width="25%"}
+:::
+:::
+
+## 主要网站和数据库 {.section-title}
+
+本节对主要数据库进行综合概述，具体数据库的详细介绍请参考前面的"公共数据资源"和"参考数据资源"章节。
+
+### NCBI（National Center for Biotechnology Information）
+
+::: {.columns}
+::: {.column width="65%"}
+**NCBI概述**
+
+- **来源**：美国国家生物技术信息中心
+- **核心数据库**：
+  - **GenBank**：核酸序列数据库 [@genbank2013]
+  - **RefSeq**：参考序列数据库（详见"参考序列"章节）
+  - **PubMed**：生物医学文献数据库
+  - **GEO**：基因表达数据库（详见"表达数据"章节）
+  - **SRA**：测序数据归档（详见"测序数据"章节）
+  - **dbSNP/ClinVar**：变异数据库（详见"变异注释数据库"章节）
+- **访问方式**：
+  - 网页界面：<https://www.ncbi.nlm.nih.gov/>
+  - 命令行工具：Entrez Direct (EDirect)
+  - API接口：E-utilities
+:::
+::: {.column width="35%"}
+::: {.figure .center}
+![NCBI网站](images/ncbi-website.png){width="400px"}
+:::
+:::
+:::
+
+::: {.columns}
+::: {.column width="50%"}
+::: {.figure}
+![GenBank网站](images/genbank-website.png){width="150px"}
+:::
+:::
+::: {.column width="50%"}
+::: {.figure}
+![PubMed网站](images/pubmed-website.png){width="150px"}
+:::
+:::
+:::
+
+**NCBI数据库访问实践**：
+
+1. **搜索序列**：访问 <https://www.ncbi.nlm.nih.gov/> → 选择数据库（如Nucleotide）→ 输入搜索关键词（基因名、Accession号等）
+2. **下载序列**：选择序列 → Send to → File → Format: FASTA → Create File
+
+## 主要网站和数据库 {.section-title}
+
+### EBI（European Bioinformatics Institute）
+
+::: {.columns}
+::: {.column width="65%"}
+**EBI概述**
+
+- **来源**：欧洲生物信息学研究所
+- **核心数据库**：
+  - **Ensembl**：基因组注释数据库（详见"参考注释"章节）
+  - **UniProt**：蛋白质序列和功能数据库 [@uniprot2023]
+  - **ArrayExpress**：基因表达数据（详见"表达数据"章节）
+  - **ENA**：欧洲核酸序列归档（详见"测序数据"章节）
+- **访问方式**：
+  - 网页界面：<https://www.ebi.ac.uk/>
+  - API接口：RESTful API
+  - 命令行工具：各种专用工具
+:::
+::: {.column width="35%"}
+::: {.figure .center}
+![EBI网站](images/ebi-website.png){width="400px"}
+:::
+:::
+:::
+
+::: {.columns}
+::: {.column width="50%"}
+::: {.figure}
+![Ensembl网站](images/ensembl-website.png){width="200px"}
+:::
+:::
+::: {.column width="50%"}
+::: {.figure}
+![UniProt网站](images/uniprot-website.png){width="200px"}
+:::
+:::
+:::
+
+## 主要网站和数据库 {.section-title}
+
+### UCSC Genome Browser
+
+::: {.columns}
+::: {.column width="65%"}
+**UCSC Genome Browser**
+
+- **来源**：UCSC
+- **特点**：功能强大的在线基因组浏览器（详见"参考注释"章节）
+- **主要功能**：
+  - 丰富的注释信息（基因、重复序列、保守区域等）
+  - 支持数据下载和自定义轨道上传
+  - 提供多种工具（BLAT、Table Browser等）
+- **访问**：<https://genome.ucsc.edu/>
+- **参考文献**：[@ucsc2002; @ensembl2022]
+:::
+::: {.column width="35%"}
+::: {.figure .center}
+![UCSC Genome Browser](images/ucsc-genome-browser.png){width="400px"}
+:::
+:::
+:::
+
+## 主要网站和数据库 {.section-title}
+
+### 其他重要数据库
+
+::: {.columns}
+::: {.column width="75%"}
+**dbGaP**
+
+- **来源**：NCBI
+- **内容**：基因型和表型数据库
+- **用途**：GWAS数据、基因型-表型关联数据
+- **访问**：<https://www.ncbi.nlm.nih.gov/gap/>
+:::
+::: {.column width="25%"}
+::: {.figure .center}
+![dbGaP网站](images/dbgap-website.png){width="150px"}
+:::
+:::
+:::
+
+::: {.columns}
+::: {.column width="75%"}
+**TCGA（The Cancer Genome Atlas）**
+
+- **来源**：NCI/NHGRI
+- **内容**：癌症基因组图谱
+- **用途**：癌症基因组数据
+- **访问**：
+  - TCGA：<https://www.cancer.gov/tcga>
+  - GDC Data Portal：<https://portal.gdc.cancer.gov/>
+:::
+::: {.column width="25%"}
+::: {.figure .center}
+![TCGA网站](images/tcga-website.png){width="400px"}
+:::
+::: {.figure}
+![GDC Data Portal网站](images/gdc-data-portal-website.png){width="90%"}
+:::
+:::
+:::
+
+## 主要网站和数据库 {.section-title}
+
+::: {.columns}
+::: {.column width="75%"}
+**国家生物信息中心（CNCB）**
+
+- **来源**：中国科学院
+- **内容**：中国生物学数据资源
+- **用途**：中国生物信息学数据存储和共享
+- **访问**：<https://www.cncb.ac.cn/>
+:::
+::: {.column width="25%"}
+::: {.figure}
+![国家生物信息中心网站](images/cncb-website.png){width="300px"}
+:::
+::: {.figure .center}
+![国家生物信息中心收录的数据库类型](images/cncb-database-types.png){width="300px"}
+:::
+:::
+:::
+
+## 数据库访问总结 {.section-title}
+
+### 主要数据库对比
+
+| 数据库 | 类型 | 主要用途 | 访问方式 |
+|--------|------|---------|---------|
+| **NCBI** | 综合 | 序列、文献、表达数据 | 网页、EDirect、API |
+| **EBI** | 综合 | 基因组、蛋白质、表达数据 | 网页、API |
+| **UCSC** | 基因组 | 基因组浏览和下载 | 网页、Table Browser |
+| **CNCB** | 综合 | 中国生物学数据资源 | 网页 |
+| **SRA** | 测序数据 | 原始测序数据归档 | 网页、SRA Toolkit |
+| **ENA** | 测序数据 | 欧洲核酸序列归档 | 网页、API |
+| **GEO** | 表达数据 | 基因表达数据（芯片、RNA-seq） | 网页、R包（GEOquery） |
+| **ArrayExpress** | 表达数据 | 芯片和测序表达数据 | 网页、API |
+| **RefSeq** | 参考序列 | 参考基因序列、转录本序列 | 网页、FTP |
+| **Ensembl** | 参考注释 | 基因组注释、基因位置、转录本 | 网页、API、BioMart |
+| **UniProt** | 蛋白质 | 蛋白质序列和功能数据库 | 网页、API、FTP |
+| **dbSNP** | 变异 | 单核苷酸多态性数据库 | 网页、FTP、API |
+| **ClinVar** | 变异 | 临床意义变异数据库 | 网页、FTP、API |
+| **gnomAD** | 变异 | 大规模人群基因组数据、频率信息 | 网页、API |
+| **GO** | 功能注释 | 基因功能标准分类体系 | 网页、R包（GO.db） |
+| **KEGG** | 功能注释 | 通路数据库和知识库 | 网页、API |
+| **Reactome** | 功能注释 | 专家审核的生物通路数据库 | 网页、API |
+| **dbGaP** | 基因型-表型 | GWAS数据、基因型-表型关联 | 网页（需授权） |
+| **TCGA** | 癌症 | 癌症基因组图谱数据 | 网页（GDC Data Portal） |
+
+## 数据下载方法 {.section-title}
+
+### 方法一：网页下载（最常用）
+
+**适用场景**：
+
+- 下载少量数据
+- 需要查看数据详情
+- 不熟悉命令行
+
+**操作步骤**（以NCBI为例）：
+
+1. 搜索数据
+2. 选择需要的数据
+3. Send to → File → 选择格式 → Create File
+
+## 数据下载方法 {.section-title}
+
+### 方法二：命令行下载（实用命令）
+
+**wget命令**（常用）：
+
+```bash
+# 下载单个文件
+wget https://example.com/data.fasta
+
+# 下载并指定文件名
+wget -O output.fasta https://example.com/data.fasta
+
+# 断点续传
+wget -c https://example.com/large_file.fasta
+```
+
+**curl命令**：
+
+```bash
+# 下载文件
+curl -O https://example.com/data.fasta
+
+# 下载到指定文件
+curl -o output.fasta https://example.com/data.fasta
+
+# 显示下载进度
+curl -# -O https://example.com/data.fasta
+```
+
+## 数据下载方法 {.section-title}
+
+### 方法三：批量下载
+
+**使用循环批量下载**：
+
+```bash
+# 创建ID列表
+cat > ids.txt << EOF
+NM_000059
+NM_000492
+NM_001005484
+EOF
+
+# 批量下载
+while read id; do
+    wget "https://www.ncbi.nlm.nih.gov/nuccore/${id}?report=fasta" \
+         -O "${id}.fasta"
+    sleep 1  # 避免请求过快
+done < ids.txt
+```
+
+## 数据下载方法 {.section-title}
+
+### 方法四：专用工具
+
+**NCBI EDirect**：
+```bash
+# 搜索并下载
+esearch -db nucleotide -query "BRCA1 AND human[orgn]" | \
+    efetch -format fasta > BRCA1_sequences.fasta
+```
+
+**SRA Toolkit**：
+```bash
+# 下载SRA数据
+prefetch SRR123456
+fastq-dump SRR123456.sra
+```
+
+## 数据下载最佳实践 {.section-title}
+
+### 注意事项
+
+1. **遵守使用条款**：注意数据库的使用限制
+2. **控制下载速度**：避免对服务器造成压力
+3. **验证数据完整性**：检查文件大小和MD5值
+4. **组织文件结构**：合理命名和组织下载的文件
+5. **记录下载信息**：记录数据来源和版本
+
+---
+
+## AI辅助学习：数据获取与下载 {.section-title .compact-section}
+
+在学习和使用生物学数据库时，AI可以帮助你：
+
+1. **了解数据需求**：不知道需要什么数据时，问AI：
+   ```
+   "我想做RNA-seq差异表达分析，需要哪些数据？
+   我已经有FASTQ文件，还需要参考基因组和基因注释文件吗？
+   应该从哪里下载这些参考数据？"
+   ```
+   通过AI了解数据需求，然后自己实际操作获取数据，理解每个数据的作用。
+
+2. **学习数据库使用**：遇到不熟悉的数据库或工具时，问AI：
+   ```
+   "我想在NCBI中搜索BRCA1基因的人类序列，应该如何搜索？
+   如何从SRA数据库下载测序数据？SRA Toolkit如何使用？"
+   ```
+   注意：AI可能给出操作步骤，但要辨识AI幻觉，实际操作时界面可能不同，需要根据实际情况调整。
+
+3. **掌握下载方法**：需要批量下载或使用命令行工具时，问AI：
+   ```
+   "我有100个NCBI序列ID在ids.txt文件中，如何批量下载这些序列？
+   请帮我写一个bash脚本，使用wget，并添加错误处理和进度显示。"
+   ```
+   通过AI生成脚本框架，理解脚本逻辑，然后自己修改和优化，通过实践掌握。
+
+**关键**：通过AI来学习，理解原理，实际操作验证，而不是完全依赖AI。
+
+# 三、Linux基础与数据处理 {.chapter-title}
+
+## 为什么需要Linux {.section-title}
+
+### Linux在生信分析中的重要性
+
+**原因**：
+
+- 大多数生信工具都是为Linux设计的
+- 命令行操作效率高，适合批量处理，且方便记录和追溯
+- 资源占用少，适合服务器环境
+
+**说明**：不需要深入系统原理，重点是学会使用命令处理数据。
+
+## Linux的常见发行版 {.section-title}
+
+![Linux发行版](images/linux-distributions.png)
+
+| 发行版 | 特点 | 适用场景 | 推荐版本 |
+|--------|------|----------|----------|
+| **Ubuntu** | 软件包丰富，社区支持好 | 桌面Linux，适合初学者 | Ubuntu 22.04 LTS |
+| **CentOS/Rocky Linux** | 稳定可靠，软件包相对保守 | 服务器，生产环境 | - |
+| **其他** | Debian、Fedora、Arch Linux等 | 不同需求 | - |
+
+**说明**：对于生信学习，Ubuntu是最佳选择，软件包齐全，教程丰富。
+
+## Linux的替代品 {.section-title}
+
+### 不同操作系统的Linux选择方案
+
+| 操作系统 | 方案 | 特点 | 安装/使用方式 |
+|----------|------|------|---------------|
+| **Windows** | **WSL** | 在Windows上直接运行Linux环境，性能好，与Windows系统集成 | `wsl --install`（Windows 10/11） |
+| **Windows** | **虚拟机** | 完全独立的Linux系统 | VMware、VirtualBox |
+| **Windows** | **云服务器** | 远程访问，无需本地安装，适合团队协作 | 阿里云、腾讯云等 |
+| **Mac** | **终端** | Mac自带Unix环境（macOS基于Unix），大部分Linux命令可以直接使用 | 部分工具需要安装（如`brew install`） |
+| **Mac** | **Docker** | 容器化Linux环境，轻量级，易于管理 | 适合运行特定工具 |
+
+## Linux基本原理
+
+### Linux中一切皆文件
+
+**核心概念**：在Linux系统中，几乎所有资源都被抽象为文件
+
+- 普通文件：文本、数据、程序等
+- 目录：文件夹也是文件
+- 设备：硬件设备（如硬盘、USB）也是文件
+- 进程：运行的程序信息也以文件形式存在
+
+**实际意义**：
+
+- 统一的访问方式：都可以用文件操作命令处理
+- 简化操作：不需要记住不同的操作接口
+
+**示例**：
+```bash
+# 查看CPU信息（作为文件读取）
+cat /proc/cpuinfo
+
+# 查看系统内存（作为文件读取）
+cat /proc/meminfo
+```
+
+## Linux基本原理
+
+### 目录结构
+
+Linux采用**树形目录结构**，从根目录 `/` 开始：
+
+**重要目录**：
+
+| 目录 | 用途 |
+|------|------|
+| `/` | 根目录，所有目录的起点 |
+| `/home` | 用户主目录，存放个人文件 |
+| `/bin` | 系统基本命令（如ls、cat） |
+| `/usr` | 用户程序和数据 |
+| `/etc` | 系统配置文件 |
+| `/var` | 可变数据（日志、临时文件） |
+| `/tmp` | 临时文件 |
+| `/opt` | 第三方软件安装目录 |
+
+**生信常用目录**：
+
+- `/home/用户名/`：你的工作目录，存放数据和分析结果
+- `/usr/local/bin`：自己安装的工具通常在这里
+- `~/`：`~` 是用户主目录的简写
+
+**路径表示**：
+
+- **绝对路径**：从根目录开始，如 `/home/user/data/file.txt`
+- **相对路径**：从当前目录开始，如 `./data/file.txt` 或 `../parent/file.txt`
+- `.`：当前目录
+- `..`：上一级目录
+
+**实际应用**：
+```bash
+# 查看当前目录
+pwd
+
+# 切换到用户主目录
+cd ~
+# 或
+cd /home/用户名
+
+# 查看目录内容
+ls /home
+```
+
+## 主题一：查看和分析数据文件 {.section-title}
+
+围绕这个实用主题，学习相关的Linux命令。
+
+### 1. 查看文件内容
+
+**cat**：查看小文件
+```bash
+cat sequence.fasta
+```
+
+**head/tail**：查看文件开头/结尾
+```bash
+head -20 sequence.fasta    # 查看前20行
+tail -20 sequence.fasta    # 查看后20行
+```
+
+**less**：分页查看大文件（推荐）
+```bash
+less large_file.vcf        # 按空格翻页，q退出
+```
+
+**实际应用**：查看FASTA、FASTQ、VCF文件的内容
+
+## 主题一：查看和分析数据文件 {.section-title}
+
+### 2. 搜索和过滤
+
+**grep**：搜索文本（重点掌握）
+
+**基本用法**：
+```bash
+# 在FASTA文件中搜索序列ID
+grep "^>" sequence.fasta
+
+# 统计序列数量
+grep -c "^>" sequence.fasta
+
+# 搜索包含特定关键词的行
+grep "BRCA1" annotation.gff
+
+# 忽略大小写
+grep -i "brca1" annotation.gff
+
+# 反向搜索（不包含的行）
+grep -v "^#" variants.vcf
+```
+
+**实际应用**：
+
+- 搜索序列ID、过滤VCF特定染色体
+- 统计文件中的特定内容
+
+**find**：查找文件
+```bash
+# 查找所有FASTA文件
+find . -name "*.fasta"
+
+# 查找大于100MB的文件
+find . -size +100M
+```
+
+## 主题一：查看和分析数据文件 {.section-title}
+
+### 3. 统计信息
+
+**wc**：统计行数、字数
+```bash
+wc -l file.txt          # 统计行数
+wc -w file.txt          # 统计字数
+```
+
+**实际应用**：
+
+- 统计序列数量（FASTA文件：`grep -c "^>" file.fasta`）
+- 统计文件大小
+
+## 主题一：查看和分析数据文件 {.section-title}
+
+### 4. 组合使用（管道）
+
+**管道 `|`**：连接命令，前一个命令的输出作为后一个命令的输入
+
+**实际案例**：
+
+```bash
+# 统计FASTA文件中序列数量
+grep -c "^>" sequence.fasta
+
+# 查看VCF文件中特定染色体的变异数
+grep "^chr1" variants.vcf | wc -l
+
+# 统计每个染色体的变异数
+grep -v "^#" variants.vcf | cut -f1 | sort | uniq -c
+```
+
+## 主题二：批量处理文件 {.section-title}
+
+围绕这个实用主题，学习相关的Linux命令。
+
+### 1. 文件管理
+
+**基本命令**：
+```bash
+ls          # 查看文件列表
+cd          # 切换目录
+pwd         # 查看当前目录
+mkdir       # 创建目录
+mv          # 移动/重命名
+cp          # 复制
+```
+
+**实际应用**：组织数据文件
+
+## 主题二：批量处理文件 {.section-title}
+
+### 2. 批量操作
+
+**通配符**：
+```bash
+*.fastq              # 所有.fastq文件
+sample_*.fq          # 所有以sample_开头的.fq文件
+[0-9]*.txt           # 所有以数字开头的.txt文件
+```
+
+**循环**：
+```bash
+# 批量重命名
+for file in *.fq; do
+    mv "$file" "${file%.fq}.fastq"
+done
+
+# 批量统计
+for file in *.fastq; do
+    echo "$file: $(wc -l < $file) lines"
+done
+```
+
+**实际应用**：
+
+- 批量重命名文件
+- 批量统计文件信息
+- 批量处理数据
+
+## 主题二：批量处理文件 {.section-title}
+
+### 3. 数据处理
+
+**cut**：提取列（重点掌握）
+```bash
+cut -f1,3 file.txt      # 提取第1和第3列（tab分隔）
+cut -d',' -f2 file.csv  # 提取第2列（逗号分隔）
+```
+
+**sort**：排序
+```bash
+sort file.txt           # 按字母顺序排序
+sort -n file.txt        # 按数字排序
+sort -k2 -n file.txt    # 按第2列数字排序
+```
+
+**uniq**：去重
+```bash
+sort file.txt | uniq    # 排序后去重
+```
+
+**实际应用**：
+
+- 处理表达矩阵、提取VCF特定列
+- 处理注释文件
+
+## 主题二：批量处理文件 {.section-title}
+
+### 4. 重定向
+
+**输出重定向**：
+```bash
+command > output.txt     # 覆盖写入
+command >> output.txt    # 追加写入
+```
+
+**实际应用**：保存命令输出、保存分析结果
+
+## 其他实用命令 {.section-title}
+
+**awk**：强大的文本处理工具
+
+**sed**：流编辑器
+
+**进程管理**：`ps`、`top`、`nohup`、`jobs`
+
+## Linux学习总结 {.section-title}
+
+### 核心要点回顾
+
+**主题一：查看和分析数据文件**
+
+- 查看文件：`cat`、`head`、`tail`、`less`
+- 搜索过滤：`grep`（重点）、`find`
+- 统计信息：`wc`
+- 组合使用：管道 `|`
+
+**主题二：批量处理文件**
+
+- 文件管理：`ls`、`cd`、`mkdir`、`mv`、`cp`
+- 批量操作：通配符、循环
+- 数据处理：`cut`（重点）、`sort`、`uniq`
+- 重定向：`>`、`>>`
+
+---
+
+## AI辅助学习：Linux命令学习 {.section-title}
+
+在学习Linux命令时，AI可以帮助你快速掌握：
+
+1. **学习命令用法**：遇到不认识的命令或不知道如何使用时，问AI：
+   ```
+   "我有一个很大的VCF文件（10GB），如何查看文件内容？
+   head和less有什么区别？什么时候用哪个？"
+   ```
+   通过AI学习命令用法，理解每个命令的适用场景，然后自己实际操作验证。
+
+2. **组合命令解决问题**：需要组合多个命令完成复杂任务时，问AI：
+   ```
+   "如何统计VCF文件中每个染色体的变异数量？
+   请给出使用grep、cut、sort、uniq组合的命令。"
+   ```
+   通过AI学习管道和命令组合，理解每个命令的作用，然后自己测试验证，通过实践掌握。
+
+3. **批量处理任务**：需要批量处理文件时，问AI：
+   ```
+   "我有100个FASTQ文件，如何批量统计每个文件的行数？
+   请给出bash循环命令示例，并解释每个部分的作用。"
+   ```
+   通过AI学习循环和通配符，理解bash脚本语法，然后自己修改和测试，通过实践掌握。
+
+**关键**：通过AI来学习，理解命令含义，实际操作验证，而不是简单复制。注意辨识AI幻觉，验证命令语法是否正确。
+
+# 四、综合实践：AI辅助完成完整项目 {.chapter-title}
+
+## 工欲善其事，必先利其器 {.section-title .compact-section}
+
+常见的AI辅助编程工具（IDE环境）：
+
+::: {.ai-tools-table-wrapper}
+
+| 工具名称 | IDE支持 | 国内可用性 | 生信分析适用性 | 主要特点 | 优势 | 劣势 |
+|---------|---------|-----------|--------------|---------|------|------|
+| **通义灵码** | VS Code、JetBrains、Cursor | ✅ 完全可用 | 优秀 | 阿里云开发，中文支持好，代码补全和解释 | 国内访问稳定、中文交互友好、对Python/R/bash支持好、免费额度充足 | 模型性能略逊于GPT-4 |
+| **Cursor** | 独立IDE（基于VS Code） | ⚠️ 需国际网络 | 优秀 | 基于GPT的AI代码编辑器，对话式编程 | 对话式交互、代码解释清晰、理解生信流程、支持长上下文 | 需要国际网络访问、资源消耗较大 |
+| **GitHub Copilot** | VS Code、JetBrains、Vim等 | ⚠️ 需国际网络 | 良好 | 基于OpenAI Codex，代码自动补全和生成 | 集成度高、对Python/R支持好、上下文理解强 | 需要付费、需国际网络访问 |
+| **Trae** | 独立IDE | ✅ 完全可用 | 良好 | 字节跳动开发，AI原生IDE，自然语言生成项目 | 全流程自动化、中文支持、多模态开发、适合复杂项目 | 需要适应新的开发范式、学习曲线较陡 |
+| **Google Antigravity** | 独立IDE | ⚠️ 需国际网络 | 良好 | Google开发，AI原生IDE，"智能体优先"模式 | 支持异步任务执行、多智能体并行工作、适合复杂项目开发 | 需要适应新的开发范式、需国际网络访问 |
+| **CodeBuddy** | VS Code、JetBrains、CLI | ✅ 完全可用 | 良好 | 腾讯开发，覆盖开发全生命周期，对话即编程 | 插件/IDE/CLI三形态、产设研一体化、多场景应用 | 需要适应新的开发模式 |
+| **Claude Code** | Web应用、API | ⚠️ 需国际网络 | 优秀 | Anthropic开发，基于Claude模型，代码质量高 | 代码质量高、安全性好、上下文窗口大、对复杂逻辑理解强 | 需要手动复制粘贴代码、需国际网络访问 |
+
+:::
+
+
+## 案例：差异表达分析完整流程 {.section-title}
+
+### 项目概述
+
+**目标**：识别疾病组和对照组之间的差异表达基因
+
+**数据类型**：RNA-seq原始数据（FASTQ格式）、表达矩阵（count表）
+
+**分析流程**：数据获取 → 预处理 → 差异分析 → 可视化 → 结果解释
+
+### 步骤1：项目规划与数据获取（AI辅助）
+
+**项目结构**：
+```
+project/
+├── data/
+│   ├── raw/          # 原始数据
+│   └── processed/    # 处理后的数据
+├── scripts/          # 分析脚本
+├── results/         # 结果文件
+└── README.md        # 项目说明
+```
+
+### 步骤2：数据预处理（Linux命令）
+
+**批量统计FASTQ文件信息**：
+
+```bash
+# 批量统计文件信息
+for file in *.fastq; do
+    echo "文件: $file"
+    echo "序列数: $(($(wc -l < $file) / 4))"
+done > fastq_stats.txt
+```
+
+### 步骤3：差异表达分析（R + AI辅助）
+
+**使用DESeq2进行差异表达分析**
+
+**参考文献**：[@deseq22014]
+
+```r
+library(DESeq2)
+library(ggplot2)
+
+# 读取表达矩阵和样本信息
+count_data <- read.table("counts.txt", header = TRUE, row.names = 1)
+sample_info <- data.frame(
+    condition = c("control", "control", "treatment", "treatment"),
+    row.names = colnames(count_data)
+)
+
+# 创建DESeqDataSet对象
+dds <- DESeqDataSetFromMatrix(
+    countData = count_data,
+    colData = sample_info,
+    design = ~ condition
+)
+
+# 过滤低表达基因
+keep <- rowSums(counts(dds)) >= 10
+dds <- dds[keep, ]
+
+# 执行差异分析
+dds <- DESeq(dds)
+results <- results(dds, contrast = c("condition", "treatment", "control"))
+
+# 筛选显著差异基因
+sig_genes <- results[results$padj < 0.05 & 
+                     abs(results$log2FoldChange) > 1, ]
+```
+
+### 步骤4：结果可视化（AI辅助）
+
+**创建火山图**：
+
+```r
+# 准备数据
+res_df <- as.data.frame(results)
+res_df$significant <- res_df$padj < 0.05 & abs(res_df$log2FoldChange) > 1
+
+# 绘制火山图
+ggplot(res_df, aes(x = log2FoldChange, y = -log10(pvalue))) +
+    geom_point(aes(color = significant), alpha = 0.6, size = 2) +
+    scale_color_manual(values = c("gray", "red")) +
+    geom_hline(yintercept = -log10(0.05), linetype = "dashed") +
+    geom_vline(xintercept = c(-1, 1), linetype = "dashed") +
+    labs(title = "Volcano Plot",
+         x = "Log2 Fold Change",
+         y = "-Log10 P-value") +
+    theme_minimal()
+```
+
+---
+
+## AI辅助学习：完整项目实践 {.section-title}
+
+在完成完整的生物信息学项目时，AI可以在各个环节帮助你：
+
+1. **项目规划**：不知道如何开始一个项目时，问AI：
+   ```
+   "我想做一个RNA-seq差异表达分析项目，应该如何规划？
+   需要哪些数据？分析流程包括哪些步骤？如何从GEO下载数据？"
+   ```
+   通过AI了解项目结构和分析流程，然后自己实际操作，理解每个步骤的作用。
+
+2. **工具使用**：遇到不熟悉的工具或需要解决具体问题时，问AI：
+   ```
+   "如何用FastQC检查FASTQ文件质量？如何用Trimmomatic去除低质量序列？
+   请帮我写一个R脚本，使用DESeq2进行差异表达分析。
+   log2FoldChange、pvalue、padj分别代表什么？"
+   ```
+   通过AI学习工具使用和代码编写，理解参数含义和统计概念，然后自己测试和修改。
+
+3. **结果可视化**：需要创建图表时，问AI：
+   ```
+   "如何用ggplot2绘制差异表达分析的火山图？
+   请给出完整的代码，包括数据准备和绘图步骤。"
+   ```
+   通过AI学习可视化方法，理解代码逻辑，然后自己调整和优化图表。
+
+**关键**：通过AI来学习，理解原理，实际操作验证，而不是完全依赖AI。注意辨识AI幻觉，验证代码和概念是否正确。
+
+---
+
+## 总结 {.section-title}
+
+### 培训内容回顾
+
+1. **生物信息学概述与生物学数据**：数据格式（FASTA、FASTQ、SAM/BAM、VCF、BED、GFF/GTF）
+2. **数据获取**：公共数据库与参考数据（NCBI、EBI、UCSC等）
+3. **Linux基础与数据处理**：查看分析数据、批量处理文件
+4. **综合实践**：AI辅助完成完整项目
+
+### 关于AI辅助学习的建议
+
+1. **多用AI工具**：在每个环节都主动使用AI，提高效率
+2. **提出好问题**：具体、有上下文、说明需求，好问题才能得到好答案
+3. **通过AI来学习**：理解AI给出的答案，实际操作验证，加深理解，而不是简单依赖AI
+4. **辨识AI幻觉**：验证命令、代码、概念、生物学解释是否正确
+
+**💡 关键**：AI是强大的学习工具，通过使用它，使我们自身能力得到大幅度的、持续的提升和拓展。
+
+---
+
+## 参考文献

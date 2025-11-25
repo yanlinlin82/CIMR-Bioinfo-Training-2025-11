@@ -1,0 +1,18 @@
+project:
+  type: default
+  output-dir: _book
+
+format:
+  revealjs:
+    theme: default
+    transition: slide
+    slide-number: c/t
+    css: styles.css
+    toc: false
+    slide-level: 2
+    code-line-numbers: false
+
+bibliography: references.bib
+
+lang: zh-CN
+citation-locale: en-US
