@@ -1,0 +1,115 @@
+# Quarto render workflow for yanlinlin82/CIMR-Bioinfo-Training-2025-11
+# Triggers on push and PR to main and manual dispatch.
+# Supports both R and Python. Uses conda if environment.yml exists,
+# falls back to requirements.txt or pip, and runs packages.R if present.
+name: Quarto — Render site
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Quarto CLI
+        uses: quarto-dev/quarto-actions/setup-quarto@v2
+        with:
+          quarto-version: latest
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          # adjust R version as needed
+          r-version: '4.2'
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Setup Miniconda (optional, used if environment.yml exists)
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: '3.10'
+
+      - name: Install Python dependencies (conda or pip) and prepare render command
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Default render command if nothing special is required
+          echo "RENDER_CMD=quarto render" >> $GITHUB_ENV
+
+          if [ -f environment.yml ]; then
+            echo "Found environment.yml — creating/updating conda env 'quarto-env'"
+            # Create or update environment; conda-incubator/setup-miniconda provides conda
+            conda env create -f environment.yml -n quarto-env || conda env update -f environment.yml -n quarto-env
+            # Use conda run so Quarto is executed inside the conda env (useful for Python kernels)
+            echo "RENDER_CMD=conda run -n quarto-env quarto render" >> $GITHUB_ENV
+          elif [ -f requirements.txt ]; then
+            echo "Found requirements.txt — installing pip packages"
+            python -m pip install --upgrade pip
+            python -m pip install -r requirements.txt
+            echo "RENDER_CMD=quarto render" >> $GITHUB_ENV
+          else
+            echo "No environment.yml or requirements.txt found — using system Python"
+          fi
+
+      - name: Install R packages (if packages.R exists)
+        shell: bash
+        run: |
+          if [ -f packages.R ]; then
+            echo "Running packages.R to install R dependencies"
+            Rscript packages.R
+          else
+            echo "No packages.R found — skipping R package install"
+          fi
+
+      - name: Render Quarto site
+        shell: bash
+        env:
+          # GITHUB_TOKEN can be used by Quarto for some auth cases (not required for local render)
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "Render command: $RENDER_CMD"
+          # Run quarto render (this will render the site or files in repo root)
+          $RENDER_CMD
+
+      # Optional: Upload site artifact (useful if you don't auto-deploy to GitHub Pages)
+      - name: Upload rendered site artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quarto-site
+          # Quarto default HTML output goes to _site by default; change if your _quarto.yml uses a different dir
+          path: _site
+
+  # Optional job: Deploy to GitHub Pages (uncomment to enable)
+  # deploy:
+  #   needs: render
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Configure GitHub Pages
+  #       uses: actions/configure-pages@v3
+  #
+  #     - name: Upload pages artifact
+  #       uses: actions/upload-pages-artifact@v1
+  #       with:
+  #         # adjust path if your output dir is not _site
+  #         path: _site
+  #
+  #     - name: Deploy to GitHub Pages
+  #       uses: actions/deploy-pages@v2
+  #       # No inputs needed; the action will deploy the uploaded artifact
